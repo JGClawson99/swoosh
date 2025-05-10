@@ -14,6 +14,7 @@ defmodule Swoosh.Email do
   * `bcc` - the intended blind carbon copy recipient(s) of the email, example: `[{"Janet Pym", "wasp.avengers@example.com"}]`
   * `text_body` - the content of the email in plaintext, example: `"Hello"`
   * `html_body` - the content of the email in HTML, example: `"<h1>Hello</h1>"`
+  * `amp_html_body` - the content of the email in AMP HTML, example: `"<h1>Hello</h1>"`
   * `reply_to` - the email address that should receive replies, example: `{"Clint Barton", "hawk.eye@example.com"}`
   * `headers` - a map of headers that should be included in the email, example: `%{"X-Accept-Language" => "en-us, en"}`
   * `attachments` - a list of attachments that should be included in the email, example: `[%{path: "/data/uuid-random", filename: "att.zip", content_type: "application/zip"}]`
@@ -63,6 +64,7 @@ defmodule Swoosh.Email do
             bcc: [],
             text_body: nil,
             html_body: nil,
+            amp_html_body: nil,
             attachments: [],
             reply_to: nil,
             headers: %{},
@@ -76,6 +78,7 @@ defmodule Swoosh.Email do
   @type subject :: String.t()
   @type text_body :: String.t()
   @type html_body :: String.t()
+  @type amp_html_body :: String.t()
 
   @type t :: %__MODULE__{
           subject: String.t(),
@@ -85,6 +88,7 @@ defmodule Swoosh.Email do
           bcc: [mailbox] | [],
           text_body: text_body | nil,
           html_body: html_body | nil,
+          amp_html_body: amp_html_body | nil,
           reply_to: [mailbox] | mailbox | nil,
           headers: map,
           private: map,
@@ -173,6 +177,7 @@ defmodule Swoosh.Email do
               :reply_to,
               :text_body,
               :html_body,
+              :amp_html_body,
               :attachment
             ] do
     apply(__MODULE__, key, [email, value])
@@ -288,6 +293,22 @@ defmodule Swoosh.Email do
   """
   @spec html_body(t, html_body | nil) :: t
   def html_body(email, html_body), do: %{email | html_body: html_body}
+
+  @doc """
+  Sets the `amp_html_body` field.
+
+  The AMP HTML body must be a string that containing the AMP HTML content.
+
+  ## Examples
+
+      iex> new() |> amp_html_body("<h1>Hello</h1>")
+      %Swoosh.Email{assigns: %{}, attachments: [], bcc: [],
+       cc: [], from: nil, headers: %{}, html_body: "<h1>Hello</h1>",
+       private: %{}, provider_options: %{}, reply_to: nil, subject: "",
+       text_body: nil, to: [], amp_html_body: "<h1>Hello</h1>"}
+  """
+  @spec amp_html_body(t, amp_html_body | nil) :: t
+  def amp_html_body(email, amp_html_body), do: %{email | amp_html_body: amp_html_body}
 
   @doc """
   Adds new recipients in the `bcc` field.
