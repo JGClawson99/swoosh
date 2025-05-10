@@ -132,6 +132,7 @@ defmodule Swoosh.Adapters.Mailgun do
     |> prepare_subject(email)
     |> prepare_html(email)
     |> prepare_text(email)
+    |> prepare_amp_html(email)
     |> prepare_cc(email)
     |> prepare_bcc(email)
     |> prepare_reply_to(email)
@@ -230,6 +231,9 @@ defmodule Swoosh.Adapters.Mailgun do
 
   defp prepare_text(body, %{text_body: nil}), do: body
   defp prepare_text(body, %{text_body: text_body}), do: Map.put(body, :text, text_body)
+
+  defp prepare_amp_html(body, %{amp_html_body: nil}), do: body
+  defp prepare_amp_html(body, %{amp_html_body: amp_html_body}), do: Map.put(body, "amp-html", amp_html_body)
 
   defp prepare_html(body, %{html_body: nil}), do: body
   defp prepare_html(body, %{html_body: html_body}), do: Map.put(body, :html, html_body)
